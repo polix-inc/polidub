@@ -31,12 +31,12 @@ class Member:
             fhash = hashlib.md5(filename.encode('utf-8'))
             fID = fhash.hexdigest()
             # Create table (file)
-            sql_command = 'CREATE TABLE ' + 'dfsf' + '(id INTEGER PRIMARY KEY, file BLOB NOT NULL, ' \
+            sql_command = 'CREATE TABLE ' + 'f' + fID + '(id INTEGER PRIMARY KEY, file BLOB NOT NULL, ' \
                           + 'filename TEXT);'
             self.__cursor.execute(sql_command)
 
             # Set values of table's items
-            sql_command = 'INSERT INTO ' + 'dfsf' + '(file, filename)' \
+            sql_command = 'INSERT INTO ' + 'f' + fID + '(file, filename)' \
                          + 'VALUES (?, ?);'
             cluster = ( file.read(), self.get_ID() )
             # Commit changes
@@ -68,11 +68,11 @@ class Member:
 
     # write member's data
     def write_member_data(self):
-        sql_command = 'CREATE TABLE ' + self.storage.get_ID() + '(userid INTEGER PRIMARY KEY, password VARCHAR(30),' \
+        sql_command = 'CREATE TABLE ' + 'm' + self.storage.get_ID() + '(userid INTEGER PRIMARY KEY, password VARCHAR(30),' \
                       + 'ip VARCHAR(15), plan CHAR(1));'# TO DO
         self.__cursor.execute(sql_command)
         member = [self.__password, self.__ip, self._plan]
-        format_str = 'INSERT INTO ' + self.storage.get_ID() + '(userid, password, ip, plan)'\
+        format_str = 'INSERT INTO ' + 'm' + self.storage.get_ID() + '(userid, password, ip, plan)'\
                 + 'VALUES (NULL, "{}", "{}", "{}");'
         sql_command = format_str.format(member[0], member[1], member[2]) #TO DO
         self.__cursor.execute(sql_command)
