@@ -1,6 +1,6 @@
 # PoliDUB Database
 ## What for?
-This software is licensed under LGPL3 and developed to be used in main Polix Inc. project [Polix UP](https://github.com/polix-inc/polix-up).</br>
+This software is licensed under LGPL3 and was developed to be used in main Polix Inc. project [Polix UP](https://github.com/polix-inc/polix-up).</br>
 Here is the list of features:
 - Stores user's id as MD5 hash
 - Stores files using BLOB
