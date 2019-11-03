@@ -11,14 +11,10 @@ class Member:
             # Encoding user's IP to be hashed and stored as ID
             encoded_ip = ip.encode('utf-8')
             ID = hashlib.md5(encoded_ip)
-            # Declaring ID storage field
+            # Declaring storage field
             self.ID = ID
-
-            # Setting path to DB
-            path_to_DB = os.path.join(os.getcwd(), ID.hexdigest(), "storage.db") #TO DO
-            # Connecting to storage DB
-            self.__connection = sqlite3.connect( path_to_DB )
-            self.__cursor = self.__connection.cursor()
+            self.__connection = None
+            self.__cursor = None
 
         # get user's storage ID
         def get_ID(self):
@@ -26,6 +22,12 @@ class Member:
 
         # write file to user's storage
         def write_file(self, file):
+            # Setting path to DB
+            path_to_DB = os.path.join(os.getcwd(), self.get_ID(), "storage.db")
+
+            # Connecting to storage DB
+            self.__connection = sqlite3.connect(path_to_DB)
+            self.__cursor = self.__connection.cursor()
             # Generate fileID
             filename = file.name
             fhash = hashlib.md5(filename.encode('utf-8'))
@@ -61,15 +63,19 @@ class Member:
         self.__ip = ip
         self._plan = plan
         self.storage = self.Storage(ip)
-        # Get storage ID and connect to DB
-        ID = self.storage.get_ID()
-        self.__connection = sqlite3.connect(os.path.join(os.getcwd(), ID, "user_info.db")) #TO DO
-        self.__cursor = self.__connection.cursor()
+        self.__connection = None            #TO DO
+        self.__cursor = None
+
 
     # write member's data
     def write_member_data(self):
-        sql_command = 'CREATE TABLE ' + 'm' + self.storage.get_ID() + '(userid INTEGER PRIMARY KEY, password VARCHAR(30),' \
-                      + 'ip VARCHAR(15), plan CHAR(1));'# TO DO
+        ID = self.storage.get_ID()
+        self.__connection = sqlite3.connect(os.path.join(os.getcwd(), ID, "user_info.db"))  # TO DO
+        self.__cursor = self.__connection.cursor()
+
+        sql_command = 'CREATE TABLE ' + 'm' + self.storage.get_ID() + '(userid INTEGER PRIMARY KEY,' \
+                                                                    + 'password VARCHAR(30),' \
+                                                                    + 'ip VARCHAR(15), plan CHAR(1));'# TO DO
         self.__cursor.execute(sql_command)
         member = [self.__password, self.__ip, self._plan]
         format_str = 'INSERT INTO ' + 'm' + self.storage.get_ID() + '(userid, password, ip, plan)'\
